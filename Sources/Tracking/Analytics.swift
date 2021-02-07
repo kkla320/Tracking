@@ -4,6 +4,7 @@
  */
 public struct Analytics {
     var handlers: [AnalyticsHandler]
+    var filters: [AnalyticsFilter]
     
     /**
     Initializes analytics with the provided AnalyticsHandlers
@@ -12,6 +13,12 @@ public struct Analytics {
      */
     public init(handlers: [AnalyticsHandler]) {
         self.handlers = handlers
+        self.filters = []
+    }
+    
+    public init(handlers: [AnalyticsHandler], filters: [AnalyticsFilter]) {
+        self.handlers = handlers
+        self.filters = filters
     }
     
     /**
@@ -22,7 +29,14 @@ public struct Analytics {
      */
     public func log(event: Event, parameters: Metadata? = nil) {
         for handler in handlers {
-            handler.logEvent(event.name, parameter: parameters + event.defaultMetadata)
+            let allParameters = parameters + event.defaultMetadata
+            let shouldSend = filters
+                .map { $0.shouldSend(event.name, targetHandler: handler, parameter: allParameters) }
+                .reduce(true) { $0 && $1 }
+            guard shouldSend else {
+                continue
+            }
+            handler.logEvent(event.name, parameter: allParameters)
         }
     }
 }
