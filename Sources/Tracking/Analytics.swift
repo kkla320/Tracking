@@ -3,8 +3,8 @@
  - Tag: Analytics
  */
 public struct Analytics {
-    var handlers: [AnalyticsHandler]
-    var filters: [AnalyticsFilter]
+    public private(set) var handlers: [AnalyticsHandler]
+    public private(set) var filters: [AnalyticsFilter]
     
     /**
     Initializes analytics with the provided AnalyticsHandlers
@@ -15,7 +15,12 @@ public struct Analytics {
         self.handlers = handlers
         self.filters = []
     }
-    
+    /**
+    Initializes analytics with the provided AnalyticsHandlers
+     - Parameters:
+        - handlers: An array of handlers that events will be passed to
+        - filters: An array of filters that will be used to filter events
+     */
     public init(handlers: [AnalyticsHandler], filters: [AnalyticsFilter]) {
         self.handlers = handlers
         self.filters = filters
