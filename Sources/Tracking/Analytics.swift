@@ -32,16 +32,16 @@ public struct Analytics {
         - event: An instance of an event to identify the current
         - parameters: Additional metadata that can be provided
      */
-    public func log(event: Event, parameters: Metadata? = nil) {
+    public func log<E>(event: E, parameters: Metadata? = nil) where E: Event {
         for handler in handlers {
             let allParameters = parameters + event.defaultMetadata
             let shouldSend = filters
-                .map { $0.shouldSend(event.name, targetHandler: handler, parameter: allParameters) }
+                .map { $0.shouldSend(E.name, targetHandler: handler, parameter: allParameters) }
                 .reduce(true) { $0 && $1 }
             guard shouldSend else {
                 continue
             }
-            handler.logEvent(event.name, parameter: allParameters)
+            handler.logEvent(E.name, parameter: allParameters)
         }
     }
 }

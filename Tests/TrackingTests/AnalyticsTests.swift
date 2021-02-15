@@ -62,20 +62,19 @@ class MockAnalyticsHandler: AnalyticsHandler {
 }
 
 extension Events {
-    static var mock: Event {
-        return MockEvent(name: "Mock", defaultMetadata: [
+    static var mock: MockEvent {
+        return MockEvent(defaultMetadata: [
             "isMock": true
         ])
     }
 }
 
 struct MockEvent: Event {
-    var name: String
+    static var name: String = "Mock"
     
     var defaultMetadata: Analytics.Metadata?
     
-    init(name: String, defaultMetadata: Analytics.Metadata? = nil) {
-        self.name = name
+    init(defaultMetadata: Analytics.Metadata? = nil) {
         self.defaultMetadata = defaultMetadata
     }
 }
