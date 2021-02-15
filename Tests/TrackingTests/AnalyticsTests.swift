@@ -11,7 +11,7 @@ final class AnalyticsTests: XCTestCase {
     }
     
     func test_log_ShouldAddDefaultParameters() {
-        analytics.log(event: .mock)
+        analytics.log(event: Events.mock)
         
         XCTAssertEqual(1, mockHandler.logEventCalls.count)
         let metadata: Analytics.Metadata? = mockHandler.logEventCalls.get(argument: "parameter", for: 0)
@@ -19,7 +19,7 @@ final class AnalyticsTests: XCTestCase {
     }
     
     func test_log_ShouldOverrideDefaultParameters() {
-        analytics.log(event: .mock, parameters: [
+        analytics.log(event: Events.mock, parameters: [
             "isMock": false
         ])
         
@@ -61,11 +61,22 @@ class MockAnalyticsHandler: AnalyticsHandler {
     }
 }
 
-extension Analytics.Event {
-    static var mock: Analytics.Event {
-        return Analytics.Event(name: "Mock", defaultMetadata: [
+extension Events {
+    static var mock: Event {
+        return MockEvent(name: "Mock", defaultMetadata: [
             "isMock": true
         ])
+    }
+}
+
+struct MockEvent: Event {
+    var name: String
+    
+    var defaultMetadata: Analytics.Metadata?
+    
+    init(name: String, defaultMetadata: Analytics.Metadata? = nil) {
+        self.name = name
+        self.defaultMetadata = defaultMetadata
     }
 }
 
