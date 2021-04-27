@@ -1,21 +1,11 @@
-//
-//  File.swift
-//  
-//
-//  Created by Kevin Klaebe on 13.01.21.
-//
-
 import Foundation
-
 
 extension Analytics {
     public typealias Metadata = [String: Analytics.MetadataValue]
 }
 
 extension Analytics {
-    /**
-     Values that can be passed for metadata
-     */
+    /// Values that can be passed for metadata
     public enum MetadataValue {
         case `nil`
         case float(Float)
