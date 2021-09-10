@@ -15,3 +15,23 @@ After that you just need to add the package as a depency in the corresponding ta
         "Tracking"
     ])
 ```
+
+## How to use
+First you have to import the framework
+```swift
+import Tracking
+```
+
+At the start of your app, you have to initialize the Analytics system
+```swift
+let myAnalyticsHandler = // ...
+let myAnalyticsFilter = // ...
+
+Analytics.bootstrap([myAnalyticsHandler], filters: [myAnalyticsFilter])
+```
+
+The you can just call the shared instance of `Analytics`
+```swift
+let myEvent = // ...
+Analytics.shared.log(event: myEvent)
+```

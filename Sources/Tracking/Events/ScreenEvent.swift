@@ -1,10 +1,10 @@
 public struct ScreenEvent: Event {
-    public static var name: String = "screen-appeared"
+    public var name: String = "screen-appeared"
     
-    public var defaultMetadata: Analytics.Metadata?
+    public var metadata: Analytics.Metadata?
     
     public init<T>(screenName: String, sender: T) {
-        self.defaultMetadata = [
+        self.metadata = [
             screenNameMetadataKey: .string(screenName),
             screenSenderMetadataKey: .string(String(describing: sender.self))
         ]
