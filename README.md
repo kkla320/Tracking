@@ -1,5 +1,7 @@
 # Tracking
 
+[![Swift](https://github.com/kkla320/Tracking/actions/workflows/swift.yml/badge.svg?branch=develop&event=push)](https://github.com/kkla320/Tracking/actions/workflows/swift.yml)
+
 This package contains a unified API for analytics purposes.
 
 ## Installation
