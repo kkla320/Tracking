@@ -5,6 +5,6 @@ public protocol Event {
     /// The name of the event
     var name: String { get }
     
-    /// Default metadata that will be send. It will be overridden if the parameters parameter defines the same metadata
+    /// The metadata, associated with the event
     var metadata: Analytics.Metadata? { get }
 }

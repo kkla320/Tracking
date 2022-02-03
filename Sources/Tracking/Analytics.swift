@@ -1,8 +1,8 @@
 /// A simple struct for sending events with optional metadata to all provided AnalyticsHandler.
 /// - Tag: Analytics
 public struct Analytics {
-    public private(set) var handlers: [AnalyticsHandler]
-    public private(set) var filters: [AnalyticsFilter]
+    public let handlers: [AnalyticsHandler]
+    public let filters: [AnalyticsFilter]
     
     /// Initializes analytics with the provided AnalyticsHandlers
     /// - Parameters:
