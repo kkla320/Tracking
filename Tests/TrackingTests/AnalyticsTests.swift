@@ -3,85 +3,49 @@ import XCTest
 
 final class AnalyticsTests: XCTestCase {
     var mockHandler: MockAnalyticsHandler!
+    var mockFilter: MockAnalyticsFilter!
     var analytics: Analytics!
     
     override func setUp() {
         mockHandler = MockAnalyticsHandler()
-        analytics = Analytics(handlers: [mockHandler])
+        mockFilter = MockAnalyticsFilter()
+        mockFilter.shouldSendBehaviour = { _,_ in
+            return true
+        }
+        analytics = Analytics(handlers: [mockHandler], filters: [mockFilter])
     }
     
-    func test_log_ShouldAddDefaultParameters() {
-        analytics.log(event: Events.mock)
+    func test_log_shouldDelegateToTheLogHandler() {
+        analytics.log(event: Events.mock())
         
         XCTAssertEqual(1, mockHandler.logEventCalls.count)
-        let metadata: Analytics.Metadata? = mockHandler.logEventCalls.get(argument: "parameter", for: 0)
-        XCTAssertEqual(true, metadata?["isMock"])
     }
     
-    func test_log_ShouldOverrideDefaultParameters() {
-        analytics.log(event: Events.mock, parameters: [
-            "isMock": false
-        ])
+    func test_log_shouldNotDelegateToLogHandler_IfFilterReturnsFalse() {
+        mockFilter.shouldSendBehaviour = { _, _ in
+            return false
+        }
         
-        XCTAssertEqual(1, mockHandler.logEventCalls.count)
-        let parameter: Analytics.Metadata? = mockHandler.logEventCalls.get(argument: "parameter", for: 0)
-        XCTAssertEqual(false, parameter?["isMock"])
-    }
-
-    static var allTests = [
-        ("test_log_ShouldAddDefaultParameters", test_log_ShouldAddDefaultParameters),
-        ("test_log_ShouldOverrideDefaultParameters", test_log_ShouldOverrideDefaultParameters),
-    ]
-}
-
-struct Call {
-    private var arguments: [String: Any]
-    
-    init(arguments: [String: Any]) {
-        self.arguments = arguments
+        analytics.log(event: Events.mock())
+        
+        XCTAssertEqual(0, mockHandler.logEventCalls.count)
     }
     
-    func get<T>(argument: String) -> T? {
-        return arguments[argument] as? T
-    }
-}
-
-class MockAnalyticsHandler: AnalyticsHandler {
-    var logEventCalls: [Call]
-    
-    init() {
-        logEventCalls = []
-    }
-    
-    func logEvent(_ name: String, parameter: Analytics.Metadata?) {
-        logEventCalls.append(Call(arguments: [
-            "name": name,
-            "parameter": parameter ?? [:]
-        ]))
+    func test_log_shouldNotDelegateToLogHandler_IfOneFilterReturnsFalse() {
+        let secondMockFilter = MockAnalyticsFilter()
+        secondMockFilter.shouldSendBehaviour = { _, _ in
+            return true
+        }
+        mockFilter.shouldSendBehaviour = { _, _ in
+            return false
+        }
+        
+        let analytics = Analytics(handlers: [mockHandler], filters: [mockFilter, secondMockFilter])
+        
+        analytics.log(event: Events.mock())
+        
+        XCTAssertEqual(0, mockHandler.logEventCalls.count)
     }
 }
 
-extension Events {
-    static var mock: MockEvent {
-        return MockEvent(defaultMetadata: [
-            "isMock": true
-        ])
-    }
-}
 
-struct MockEvent: Event {
-    static var name: String = "Mock"
-    
-    var defaultMetadata: Analytics.Metadata?
-    
-    init(defaultMetadata: Analytics.Metadata? = nil) {
-        self.defaultMetadata = defaultMetadata
-    }
-}
-
-extension Array where Element == Call {
-    func get<T>(argument: String, for call: Int) -> T? {
-        let call = self[call]
-        return call.get(argument: argument)
-    }
-}

@@ -2,8 +2,7 @@
 public protocol AnalyticsFilter {
     /// This method is used to filter an event.
     /// - Parameters:
-    ///    - name: The name of the event
+    ///    - event: The event which will be send
     ///    - targetHandler: The handler that should handle the tracking event
-    ///    - parameter: The metadata for the event to log
-    func shouldSend(_ name: String, targetHandler: AnalyticsHandler, parameter: Analytics.Metadata?) -> Bool
+    func shouldSend(event: Event, targetHandler: AnalyticsHandler) -> Bool
 }
