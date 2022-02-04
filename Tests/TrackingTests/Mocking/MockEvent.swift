@@ -18,7 +18,7 @@ struct MockEvent: Event {
     }
 }
 
-extension Events {
+extension Event where Self == MockEvent {
     static func mock(metadata: Analytics.Metadata? = nil) -> MockEvent {
         return MockEvent(metadata: metadata)
     }

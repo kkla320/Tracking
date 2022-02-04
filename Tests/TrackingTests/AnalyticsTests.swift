@@ -16,7 +16,7 @@ final class AnalyticsTests: XCTestCase {
     }
     
     func test_log_shouldDelegateToTheLogHandler() {
-        analytics.log(event: Events.mock())
+        analytics.log(event: .mock())
         
         XCTAssertEqual(1, mockHandler.logEventCalls.count)
     }
@@ -26,7 +26,7 @@ final class AnalyticsTests: XCTestCase {
             return false
         }
         
-        analytics.log(event: Events.mock())
+        analytics.log(event: .mock())
         
         XCTAssertEqual(0, mockHandler.logEventCalls.count)
     }
@@ -42,7 +42,7 @@ final class AnalyticsTests: XCTestCase {
         
         let analytics = Analytics(handlers: [mockHandler], filters: [mockFilter, secondMockFilter])
         
-        analytics.log(event: Events.mock())
+        analytics.log(event: .mock())
         
         XCTAssertEqual(0, mockHandler.logEventCalls.count)
     }
